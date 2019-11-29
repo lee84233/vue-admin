@@ -37,6 +37,25 @@ const ROUTER = new Router({
     },
     ...User,
     ...Home,
+    {
+      path: '/admin',
+      component: () => import('@/views/layout/layout-admin/index'),
+      children: [
+        {
+          path: '/',
+          redirect: 'index'
+        },
+        {
+          path: 'index',
+          name: 'home',
+          meta: {
+            title: '首页',
+            requiresAuth: true
+          },
+          component: () => import('@/views/home/index')
+        }
+      ]
+    },
     // 404等错误页面，放在最后！
     ...error
   ],

@@ -6,14 +6,14 @@
         <div :class="['form-item', userName.error ? 'error' : '']">
           <div class="form-item_context">
             <svg-icon class-name="form-item_icon" icon-name="user" />
-            <input type="text" class="form-item_input" v-model="userName.value" @change="required('userName')" placeholder="请输入用户名" />
+            <input type="text" class="form-item_input" v-model="userName.value" @change="required('userName')" placeholder="请输入用户名 / admin" />
           </div>
           <span class="form-item_error">请输入用户名</span>
         </div>
         <div :class="['form-item', password.error ? 'error' : '']">
           <div class="form-item_context">
             <svg-icon class-name="form-item_icon" icon-name="password" />
-            <input type="password" class="form-item_input" v-model="password.value" @change="required('password')" placeholder="请输入密码" />
+            <input type="password" class="form-item_input" v-model="password.value" @change="required('password')" placeholder="请输入密码 / admin" />
           </div>
           <span class="form-item_error">请输入密码</span>
         </div>

@@ -61,10 +61,10 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button-group>
-            <el-button type="primary" plain size="mini">编辑</el-button>
-            <el-button type="danger" plain size="mini" @click="handleDelete(scope.row.id)">删除</el-button>
-          </el-button-group>
+          <!-- <el-button-group> -->
+          <el-button type="primary" plain size="mini" @click="handleEdit">编辑</el-button>
+          <el-button type="danger" plain size="mini" @click="handleDelete(scope.row.id)">删除</el-button>
+          <!-- </el-button-group> -->
         </template>
       </el-table-column>
     </el-table>
@@ -81,13 +81,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <data-dialog :visible="dataModalVisible" @dialogClose="dialogClose" />
   </div>
 </template>
 
 <script>
 import { getList } from '@/api/table'
+import DataDialog from './dataDialog'
 
 export default {
+  components: { DataDialog },
   data() {
     return {
       // 表单
@@ -105,7 +109,9 @@ export default {
         pageSizes: [5, 10, 20, 30, 50],
         total: 400,
         layout: 'prev, pager, next, sizes, jumper, ->, total'
-      }
+      },
+
+      dataModalVisible: false
     }
   },
   created() {
@@ -120,6 +126,10 @@ export default {
       })
     },
 
+    // 编辑
+    handleEdit() {
+      this.dataModalVisible = true
+    },
     // 删除
     handleDelete(id) {
       this.$message.error(`删除：${id}`)
@@ -137,6 +147,9 @@ export default {
     // 序号
     tableInx(index) {
       return (this.pagination.currentPage - 1) * this.pagination.pageSize + index + 1
+    },
+    dialogClose(dataModalVisible) {
+      this.dataModalVisible = dataModalVisible
     }
   }
 }

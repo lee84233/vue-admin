@@ -1,10 +1,9 @@
 import Mock from 'mockjs'
 
 const data = Mock.mock({
-  'items|30': [{
+  'items|5': [{
     id: '@id',
-    title: '@sentence(10, 20)',
-    'status|1': ['published', 'draft', 'deleted'],
+    title: '@sentence(5, 10)',
     author: 'name',
     display_time: '@datetime',
     pageviews: '@integer(300, 5000)'
@@ -20,7 +19,7 @@ export default [
       return {
         code: 20000,
         data: {
-          total: items.length,
+          total: 35,
           items: items
         }
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-layout-admin">
+  <div class="layout-admin">
     <!-- 页头 -->
     <!-- <headers></headers> -->
     <!-- 左菜单 -->

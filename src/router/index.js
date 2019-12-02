@@ -47,7 +47,7 @@ const ROUTER = new Router({
         },
         {
           path: 'index',
-          name: 'home',
+          name: 'layout-home',
           meta: {
             title: '首页',
             requiresAuth: true

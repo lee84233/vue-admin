@@ -10,6 +10,7 @@
  */
 
 import axios from 'axios'
+import qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -151,6 +152,55 @@ function goLogin() {
 }
 
 /**
+ * 对POST、PUT请求，参数格式化
+ *
+ * @param {Object} data：参数
+ * @returns {Object} 格式化后的参数类型
+ */
+/**
+ * 对POST、PUT请求，参数格式化
+ * @param {Object} data：需要格式化的对象
+ * @param {*} dataType：form | json
+ * @returns
+ */
+function formatParams(data, dataType) {
+  // dataType 优先级最高
+  if (dataType === 'form') {
+    data = qsStringify(data)
+    return data
+  } else if (dataType === 'json') {
+    return data
+  }
+
+  // axios全局配置 优先级次之
+  if (
+    OPTION &&
+    OPTION['headers'] &&
+    OPTION['headers']['Content-Type'] &&
+    OPTION['headers']['Content-Type'].includes(
+      'application/x-www-form-urlencoded'
+    )
+  ) {
+    data = qsStringify(data)
+  }
+  return data
+}
+
+/**
+ * 参数转换为Form Data格式
+ * 使用QS插件
+ *
+ * @param {Object} data
+ * @returns Form Data
+ */
+function qsStringify(data) {
+  data = qs.stringify(data, {
+    encode: false
+  })
+  return data
+}
+
+/**
  * axios请求
  * @param {Object} object：options
  * @returns {Promise} Promise
@@ -160,6 +210,7 @@ export default async function({
   url,
   method = 'get',
   data = {},
+  dataType = '',
   headers = {},
   loading = false
 }) {
@@ -167,10 +218,32 @@ export default async function({
   method = method.toLowerCase() // 请求方法
   let params = {} // 与请求一起发送的 URL 参数
 
+  // Content-Type
+  const contentType = headers['Content-Type'] || headers['content-type'] || headers['Content-type'] || headers['content-Type'] || null
+  if (contentType) {
+    if (contentType.includes('application/x-www-form-urlencoded')) {
+      dataType = 'form'
+    } else if (contentType.includes('application/json')) {
+      dataType = 'json'
+    }
+  }
+
+  // 设置请求头的编码类型
+  if (dataType === 'form') {
+    headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+  } else if (dataType === 'json') {
+    headers['Content-Type'] = 'application/json;charset=UTF-8'
+  }
+
   // 请求参数
   if (['get', 'delete'].includes(method)) {
     params = data
     data = {}
+  } else if (['post', 'put', 'patch'].includes(method)) {
+    data = formatParams(data, dataType)
+  } else {
+    console.error(`${url}接口请求方法错误：${method}`); // eslint-disable-line
+    return
   }
 
   // request 参数

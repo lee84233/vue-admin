@@ -66,7 +66,7 @@ export default {
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.length < 5) {
         callback(new Error('请输入密码'))
       } else {
         callback()
@@ -75,7 +75,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: 'admin'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

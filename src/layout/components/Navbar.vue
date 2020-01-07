@@ -6,13 +6,15 @@
 
     <div class="right-menu">
       <span class="name">{{ name || '用户' }}</span>
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container" trigger="hover">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <el-dropdown-item>
+          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item>消息中心</el-dropdown-item>
+          <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -22,6 +24,7 @@
 </template>
 
 <script>
+import avatar from '@/assets/images/avatar.jpeg'
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -31,23 +34,40 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      avatar,
+      loading: null
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
-      'name',
-      'avatar'
+      'name'
+      // 'avatar'
     ])
+  },
+  destroyed() {
+    this.loading && this.loading.close()
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     logout() {
-      this.$store.dispatch('user/logout').then(res => {
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-      }).catch(e => {
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.loading = this.$loading({
+        lock: true,
+        text: '正在退出...'
       })
+      this.$store.dispatch('user/logout').then(res => {
+        this.logoutAction()
+      }).catch(e => {
+        this.logoutAction()
+      })
+    },
+    logoutAction() {
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.loading && this.loading.close()
     }
   }
 }

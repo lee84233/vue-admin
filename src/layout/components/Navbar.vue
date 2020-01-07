@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <span class="name">{{ name || '用户' }}</span>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -33,6 +34,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
+      'name',
       'avatar'
     ])
   },
@@ -40,21 +42,26 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      this.$store.dispatch('user/logout').then(res => {
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      }).catch(e => {
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "~@/styles/variables.scss";
+
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow:0px 0px 10px 5px rgba(5, 3, 20, 0.04);
 
   .hamburger-container {
     line-height: 46px;
@@ -74,12 +81,20 @@ export default {
   }
 
   .right-menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
     float: right;
     height: 100%;
-    // line-height: 50px;
+    padding: 5px 0;
 
     &:focus {
       outline: none;
+    }
+
+    .name {
+      color: $gray;
     }
 
     .right-menu-item {
@@ -101,24 +116,25 @@ export default {
     }
 
     .avatar-container {
+      margin-left: 10px;
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
         position: relative;
 
         .user-avatar {
-          cursor: pointer;
+          display: block;
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          cursor: pointer;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 14px;
           font-size: 12px;
         }
       }

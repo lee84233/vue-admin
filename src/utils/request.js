@@ -13,6 +13,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import NProgress from '@/utils/nprogress'
 
 /**
  * Request基本参数
@@ -20,7 +21,7 @@ import { getToken } from '@/utils/auth'
 const OPTION = {
   // 接口基础路径和配置代理的路径
   // url = base url + request url
-  baseURL: process.env.VUE_APP_BASE_URL,
+  baseURL: process.env.VUE_APP_BASE_API,
   // 超时时间
   timeout: 30000,
   // 请求头
@@ -40,7 +41,7 @@ AXIOS_BASE.interceptors.request.use(
     // 在发送请求之前处理
     // headers添加token
     if (store.getters.token) {
-      config.headers.Authorization = getToken()
+      config.headers[process.env.VUE_APP_HEADERS_TOKEN] = getToken()
     }
     return config
   },
@@ -159,8 +160,10 @@ export default async function({
   url,
   method = 'get',
   data = {},
-  headers = {}
+  headers = {},
+  loading = false
 }) {
+  loading === true && NProgress.start()
   method = method.toLowerCase() // 请求方法
   let params = {} // 与请求一起发送的 URL 参数
 
@@ -186,13 +189,16 @@ export default async function({
     AXIOS_BASE.request(option)
       .then(
         (response) => {
+          loading === true && NProgress.done()
           resolve(response.data)
         },
         (error) => {
+          loading === true && NProgress.done()
           reject(error)
         }
       )
       .catch((error) => {
+        loading === true && NProgress.done()
         reject(error)
       })
   })

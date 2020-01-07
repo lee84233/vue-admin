@@ -63,7 +63,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: '表格', icon: 'table' }
+        meta: { title: '表格示例页', icon: 'table' }
       }
     ]
   },
@@ -76,7 +76,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
+        meta: { title: '表单示例页', icon: 'form' }
       }
     ]
   },

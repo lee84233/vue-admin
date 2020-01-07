@@ -1,85 +1,92 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
+    <!-- 表单信息 -->
+    <block-title class="m-t" name="表单信息" />
+    <el-form
+      ref="form"
+      :rules="rules"
+      :model="form"
+      label-width="110px"
+    >
+      <el-row>
+        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 8}">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="form.name" placeholder="名称" />
+          </el-form-item>
         </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
+
+        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 8}">
+          <el-form-item label="成立日期" prop="time">
+            <el-date-picker
+              v-model="form.time"
+              class="w-100"
+              placeholder="成立日期"
+              :value-format="dateValueFormat"
+              :picker-options="datePickerOptions"
+            />
+          </el-form-item>
         </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
+
+        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 8}">
+          <el-form-item label="状态" prop="status">
+            <el-input v-model="form.status" placeholder="状态" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="24">
+          <el-form-item label-width="0" class="flex-center">
+            <el-button type="primary" style="width: 150px" @click="onSubmit">保 存</el-button>
+            <el-button @click="onReset">重 置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
+import BlockTitle from '@/components/BlockTitle' // 标题栏
+import forms from '@/mixins/forms'
+
 export default {
+  components: { BlockTitle },
+  mixins: [forms],
   data() {
     return {
       form: {
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        time: '',
+        status: ''
+      }
+    }
+  },
+  computed: {
+    rules() {
+      return {
+        name: [
+          { required: true, message: '请输入内容', trigger: 'change' }
+        ],
+        time: [
+          { required: true, message: '请输入内容', trigger: 'change' }
+        ],
+        status: [
+          { required: true, message: '请输入内容', trigger: 'change' }
+        ]
       }
     }
   },
   methods: {
     onSubmit() {
-      this.$message('submit!')
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          console.log(this.form)
+          this.$message('submit!')
+        }
       })
+    },
+    onReset() {
+      this.$refs.form.resetFields()
     }
   }
 }
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
-

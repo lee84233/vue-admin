@@ -1,16 +1,13 @@
 import router from './router'
-import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import NProgress from '@/utils/nprogress'
 import getPageTitle from '@/utils/get-page-title'
-
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+import { getToken } from '@/utils/auth' // get token from cookie
 
 /**
  * 白名单
  * no redirect whitelist
  */
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login']
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -31,9 +28,7 @@ router.beforeEach(async(to, from, next) => {
       next()
     }
   } else {
-    /* has no token*/
-
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.includes(to.path)) {
       // in the free login whitelist, go directly
       next()
     } else {

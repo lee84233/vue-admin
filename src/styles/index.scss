@@ -1,3 +1,6 @@
+/**
+ * 全局CSS
+ */
 @import './variables.scss';
 @import './mixin.scss';
 @import './transition.scss';
@@ -59,7 +62,37 @@ div:focus {
   }
 }
 
+ul, ol, p {
+  margin: 0;
+}
+
+ul, ol {
+  list-style: none;
+}
+
 // main-container global css
 .app-container {
   padding: 20px;
 }
+
+/**
+ * 布局相关
+ */
+
+// 居中
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+// 字号
+.font-12 { font-size: 12px; }
+.font-14 { font-size: 14px; }
+.font-16 { font-size: 16px; }
+.font-18 { font-size: 18px; }
+.font-20 { font-size: 20px; }
